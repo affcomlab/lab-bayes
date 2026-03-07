@@ -11,14 +11,10 @@ It is built on top of the public `jmgirard/rocker-bayes` image but adds a secure
     + `/mnt/datasets`: Mounted **Read-Only** (You cannot accidentally delete raw data).
     + `/mnt/projects`: Mounted **Read-Write** (Save your scripts and model outputs here).
 
----
-
 ## Prerequisites
 
 1.  **Docker Desktop:** Installed and running on your local machine.
 2.  **Network Access:** You must be connected to the campus network or VPN to access the lab drives.
-
----
 
 ## Setup & Launch
 
@@ -64,9 +60,8 @@ You will be prompted for your **KU Online ID** and **Password** via a secure pop
 
 If successful, you will see:
 > ✅ Mounted: /mnt/datasets (Read-Only)
+>
 > ✅ Mounted: /mnt/projects (Read-Write)
-
----
 
 ## Usage Example
 
@@ -105,8 +100,6 @@ fit <- brm(
 write_rds(fit, "/mnt/projects/MyStudy/Models/subject_intercept_model.rds")
 ```
 
----
-
 ## Shutdown
 
 When you are finished working, return to your terminal inside the `lab-bayes` folder and stop the server container:
@@ -114,8 +107,6 @@ When you are finished working, return to your terminal inside the `lab-bayes` fo
 ```bash
 docker compose down
 ```
-
----
 
 ## Troubleshooting
 
