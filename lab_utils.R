@@ -67,4 +67,6 @@ connect_lab_drives <- function(username = NULL) {
     }
 }
 
-message("Loaded AffCom Lab Utils. Run connect_lab_drives() to login.")
+if (interactive()) {
+  message("Loaded AffCom Lab Utils. Run connect_lab_drives() to login.")
+}
