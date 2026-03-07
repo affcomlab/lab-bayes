@@ -1,20 +1,15 @@
-# /lab_config/lab_utils.R
+# /etc/R/lab_utils.R
 
 #' Connect to AffCom Research Servers
-#' Interactively mounts lab drives with student credentials.
-#' - Datasets: READ-ONLY (Safe)
-#' - Projects: READ-WRITE (For saving results)
 connect_lab_drives <- function(username = NULL) {
   
     # --- SERVER CONFIGURATION ---
     mounts <- list(
-        # DATASETS: Read-Only (ro)
         list(
             remote = "//resfs.home.ku.edu/groups_hipaa/lsi/jgirard/general/datasets", 
             local = "/mnt/datasets",
             flags = "ro,vers=3.0,sec=ntlmssp" 
         ),
-        # PROJECTS: Read-Write (rw) with full permissions (0777)
         list(
             remote = "//resfs.home.ku.edu/groups_hipaa/lsi/jgirard/general/projects", 
             local = "/mnt/projects",
@@ -29,33 +24,53 @@ connect_lab_drives <- function(username = NULL) {
         return(invisible(TRUE))
     }
 
-    # 2. Get Credentials
+    # 2. Check Network Connectivity
+    message("Checking KU network connectivity...")
+    test_con <- try(
+        socketConnection("resfs.home.ku.edu", port = 445, timeout = 2, open = "r"), 
+        silent = TRUE
+    )
+    
+    if (!inherits(test_con, "connection")) {
+        message("\n❌ ERROR: Cannot reach the KU research server.")
+        message("💡 Hint: Are you connected to the KU Anywhere VPN or the campus network?\n")
+        return(invisible(FALSE))
+    }
+    close(test_con)
+
+    # 3. Get Credentials
     message("--- AffCom Lab Server Login ---")
-  
     if (is.null(username)) {
         username <- rstudioapi::showPrompt("Login", "Enter KU Username: ")
     }
-  
     password <- rstudioapi::askForPassword("Enter KU Password: ")
 
-    # 3. Mount Loop
+    # 4. Mount Loop with specific error checking
     success <- TRUE
-  
     for (m in mounts) {
-        # Construct command with specific flags for this mount
+        # Create a temporary file to capture the mount command's error output
+        err_file <- tempfile()
+        
+        # Redirect stderr (2>) to the temporary file
         cmd <- sprintf(
-            "sudo mount -t cifs '%s' '%s' -o username='%s',password='%s',%s",
-            m$remote, m$local, username, password, m$flags
+            "sudo mount -t cifs '%s' '%s' -o username='%s',password='%s',%s 2>%s",
+            m$remote, m$local, username, password, m$flags, err_file
         )
     
-        exit_code <- system(cmd, ignore.stderr = TRUE)
+        exit_code <- system(cmd)
+        err_msg <- readLines(err_file, warn = FALSE)
+        unlink(err_file)
     
         if (exit_code == 0) {
-            # Visual confirmation of permissions
             perm_label <- ifelse(grepl("ro,", m$flags), "(Read-Only)", "(Read-Write)")
             message(sprintf("✅ Mounted: %s %s", m$local, perm_label))
         } else {
-            message(sprintf("❌ Failed to mount: %s", m$local))
+            # Specifically check for "Permission denied" in the captured error
+            if (any(grepl("Permission denied", err_msg, ignore.case = TRUE))) {
+                message(sprintf("❌ Failed to mount %s: Incorrect username or password.", m$local))
+            } else {
+                message(sprintf("❌ Failed to mount %s: %s", m$local, paste(err_msg, collapse = " ")))
+            }
             success <- FALSE
         }
     }
@@ -63,7 +78,7 @@ connect_lab_drives <- function(username = NULL) {
     if (success) {
         message("\n🚀 All drives connected successfully!")
     } else {
-        warning("\n⚠️ Some drives failed to connect. Check your password or VPN.")
+        warning("\n⚠️ Some drives failed to connect. Double-check your credentials.")
     }
 }
 
