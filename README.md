@@ -5,71 +5,59 @@ This is the **AffCom Lab Edition** of the Bayesian analysis environment.
 It is built on top of the public `jmgirard/rocker-bayes` image but adds a secure "Lab Layer" that allows you to connect directly to the AffCom **Datasets** and **Projects** network shares from inside your RStudio session.
 
 ### Features
-- **Browser-Based Interface:** Runs a full RStudio Server instance accessible directly through your web browser.
-- **Pre-Loaded Tools:** Comes with RStan, brms, and other essential tools for Bayesian data analysis pre-installed.
-- **Safety Rails:**
-    + `/mnt/datasets`: Mounted **Read-Only** (You cannot accidentally delete raw data).
-    + `/mnt/projects`: Mounted **Read-Write** (Save your scripts and model outputs here).
+* **Browser-Based Interface:** Runs a full RStudio Server instance accessible directly through your web browser.
+* **Pre-Loaded Tools:** Comes with RStan, brms, and other essential tools for Bayesian data analysis pre-installed.
+* **Safety Rails:**
+    * `/mnt/datasets`: Mounted **Read-Only** (You cannot accidentally delete raw data).
+    * `/mnt/projects`: Mounted **Read-Write** (Save your scripts and model outputs here).
+
+---
 
 ## Prerequisites
 
-1.  **Docker Desktop:** Installed and running on your local machine.
+1.  **Docker Desktop:** [Download and install Docker Desktop](https://www.docker.com/products/docker-desktop/) on your local machine.
 2.  **Network Access:** You must be connected to the campus network or VPN to access the lab drives.
+
+---
 
 ## Setup & Launch
 
-### 1. Download the Repository
-Open a terminal (PowerShell or Terminal) and run:
+### 1. Download the Environment (One-Time Setup)
+You do not need to install any special programming tools to download the lab environment.
 
-```bash
-git clone https://github.com/affcomlab/lab-bayes.git
-cd lab-bayes
-```
+1. Go to the GitHub repository page: `https://github.com/affcomlab/lab-bayes`
+2. Click the green **"<> Code"** button near the top right.
+3. Select **"Download ZIP"** from the dropdown menu.
+4. Extract (unzip) the downloaded folder to a permanent location on your computer, such as your Desktop or Documents folder.
 
-### 2. Start the Environment & Access RStudio
-Instead of memorizing Docker commands, you can use the provided start scripts.
+### 2. Run the Environment & Access RStudio
+Whenever you want to work in the lab environment, simply open your extracted `lab-bayes` folder and double-click the launcher script for your operating system. The script will start the server and automatically open RStudio in your web browser.
 
 **For Windows:**
-Run the `start_windows.bat` file from your terminal or double-click it in your file explorer.
-```cmd
-.\start_windows.bat
-```
+Double-click the `start-windows.bat` file. 
+*(Note: If Windows Defender prompts you, click "More info" and then "Run anyway").*
 
-**For Mac/Linux:**
-Run the `start_mac.sh` script from your terminal.
-```bash
-./start_mac.sh
-```
+**For Mac:**
+Double-click the `start-mac.command` file. 
 
-*Note: The first time you run this, it will take a moment to download the environment. Subsequent runs will be very fast.*
+**Mac Users (First Time Setup Note):** macOS protects you from running downloaded scripts by default. The very first time you download this folder, you must give the script permission to run:
+1. Open the **Terminal** app.
+2. Type `chmod u+x ` (please make sure to leave a space at the end).
+3. Drag and drop the `start-mac.command` file from your folder into the Terminal window.
+4. Press **Enter**. 
+You only ever have to do this once! After that, you can just double-click the file normally.
 
-Once the script finishes, it will provide a link. Open your preferred web browser and navigate to the provided link (**http://localhost:8787**).
+*Note: The first time you run the start script, Docker will take a few minutes to download the necessary background files. Subsequent runs will be almost instant.*
 
-### 3. Access RStudio
-Open your preferred web browser and navigate to:
-**http://localhost:8787**
-
-### 4. Connect to Lab Drives
-Once RStudio loads, run the connection function in the R console:
-
-```r
-connect_lab_drives()
-```
-
-You will be prompted for your **KU Online ID** and **Password** via a secure popup. 
-
-If successful, you will see:
-> ✅ Mounted: /mnt/datasets (Read-Only)
->
-> ✅ Mounted: /mnt/projects (Read-Write)
+---
 
 ## Usage Example
 
 You can analyze datasets directly from the server and save your compiled models to your project folder.
 
 ```r
-library(tidyverse)
 library(brms)
+library(tidyverse)
 
 # 1. Login (if you haven't already)
 connect_lab_drives()
@@ -78,44 +66,41 @@ connect_lab_drives()
 df <- read_csv("/mnt/datasets/MyStudy/clean_data.csv")
 
 # 3. Prepare data
-df_summary <- 
-    df |>
-    summarize(
-        mean_score = mean(score), 
-        .by = subject_id
-    )
+df_summary <- df |>
+  summarize(mean_score = mean(score), .by = subject_id)
 
 # 4. Fit a Bayesian model
 fit <- brm(
-    mean_score ~ 1, 
-    data = df_summary, 
-    family = gaussian(),
-    chains = 4, 
-    cores = 4,
-    backend = "cmdstanr",
-    threads = threading(2)
+  mean_score ~ 1, 
+  data = df_summary, 
+  family = gaussian(),
+  chains = 4, 
+  cores = 4
 )
 
 # 5. Save results back to the PROJECTS drive
 write_rds(fit, "/mnt/projects/MyStudy/Models/subject_intercept_model.rds")
 ```
 
+---
+
 ## Shutdown
 
-When you are finished working, return to your terminal inside the `lab-bayes` folder and stop the server container:
+When you are finished working, it is good practice to shut down the server to save system resources. You can do this easily without the command line:
+1. Open the **Docker Desktop** application.
+2. Go to the **Containers** tab.
+3. Find the `lab-bayes` container in the list and click the **Stop** (square) button.
 
-```bash
-docker compose down
-```
+---
 
 ## Troubleshooting
 
 ### "Connection failed" or "Host is down"
-- **Check Credentials:** Did you type your password correctly?
-- **Check NetID:** Use just your username (e.g., `jdoe`), not your full email.
-- **Check Network:** Verify that you are connected to the campus network or VPN.
+* **Check Credentials:** Did you type your password correctly?
+* **Check NetID:** Use just your username (e.g., `jdoe`), not your full email.
+* **Check Network:** Verify that you are connected to the campus network or VPN.
 
 ### "Permission Denied" when saving files
-- **Wrong Folder:** Check where you are trying to save.
-    + You **cannot** save to `/mnt/datasets` (Read-Only).
-    + You **can** save to `/mnt/projects` (Read-Write).
+* **Wrong Folder:** Check where you are trying to save.
+    * You **cannot** save to `/mnt/datasets` (Read-Only).
+    * You **can** save to `/mnt/projects` (Read-Write).
