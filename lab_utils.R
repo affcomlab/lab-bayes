@@ -3,17 +3,22 @@
 #' Connect to AffCom Research Servers
 connect_lab_drives <- function(username = NULL) {
   
+    curr_uid <- system("id -u", intern = TRUE)
+    curr_gid <- system("id -g", intern = TRUE)
+    
+    base_flags <- sprintf("vers=3.0,sec=ntlmssp,uid=%s,gid=%s,noperm,nobrl", curr_uid, curr_gid)
+    
     # --- SERVER CONFIGURATION ---
     mounts <- list(
         list(
             remote = "//resfs.home.ku.edu/groups_hipaa/lsi/jgirard/general/datasets", 
             local = "/mnt/datasets",
-            flags = "ro,vers=3.0,sec=ntlmssp" 
+            flags = paste0("ro", base_flags) 
         ),
         list(
             remote = "//resfs.home.ku.edu/groups_hipaa/lsi/jgirard/general/projects", 
             local = "/mnt/projects",
-            flags = "rw,vers=3.0,sec=ntlmssp,file_mode=0777,dir_mode=0777"
+            flags = paste0("rw,file_mode=0777,dir_mode=0777,", base_flags)
         )
     )
     # ----------------------------
