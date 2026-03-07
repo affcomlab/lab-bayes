@@ -21,10 +21,9 @@ It is built on top of the public `jmgirard/rocker-bayes` image but adds a secure
 ### 1. Download the Environment (One-Time Setup)
 You do not need to install any special programming tools to download the lab environment.
 
-1. Go to the GitHub repository page: `https://github.com/affcomlab/lab-bayes`
-2. Click the green **"<> Code"** button near the top right.
-3. Select **"Download ZIP"** from the dropdown menu.
-4. Extract (unzip) the downloaded folder to a permanent location on your computer, such as your Desktop or Documents folder.
+1. Go to the GitHub repository Releases page: <https://github.com/affcomlab/lab-bayes/releases/latest>
+2. Under the **Assets** section of the latest release, click on **Source code (zip)** to download the environment.
+3. Extract (unzip) the downloaded folder to a permanent location on your computer, such as your Desktop or Documents folder.
 
 ### 2. Run the Environment & Access RStudio
 Whenever you want to work in the lab environment, simply open your extracted `lab-bayes` folder and double-click the launcher script for your operating system. The script will start the server and automatically open RStudio in your web browser.
@@ -34,14 +33,13 @@ Double-click the `start-windows.bat` file.
 *(Note: If Windows Defender prompts you, click "More info" and then "Run anyway").*
 
 **For Mac:**
-Double-click the `start-mac.command` file. 
+macOS strictly protects you from running downloaded scripts on university laptops. The very first time you use this file, you must use the Terminal to tell your Mac it is safe.
+1. Open the **Terminal** app (you can search for it using Spotlight / Command+Space).
+2. Type the word `bash ` (please make sure to type a space after the word).
+3. Drag and drop the `start-mac.command` file from your folder directly into the Terminal window.
+4. Press **Enter**.
 
-**Mac Users (First Time Setup Note):** macOS protects you from running downloaded scripts by default. The very first time you download this folder, you must give the script permission to run:
-1. Open the **Terminal** app.
-2. Type `chmod u+x ` (please make sure to leave a space at the end).
-3. Drag and drop the `start-mac.command` file from your folder into the Terminal window.
-4. Press **Enter**. 
-You only ever have to do this once! After that, you can just double-click the file normally.
+You only ever have to do this once! The script will automatically fix its own security permissions. The next time you want to work, you can just double-click the file normally.
 
 *Note: The first time you run the start script, Docker will take a few minutes to download the necessary background files. Subsequent runs will be almost instant.*
 
