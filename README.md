@@ -76,6 +76,20 @@ fit <- brm(
 write_rds(fit, "/mnt/projects/MyStudy/Models/subject_intercept_model.rds")
 ```
 
+## Best Practices: Using RStudio Projects
+
+For the best experience, you should create or open an RStudio Project directly on the **Projects** drive. This ensures your working directory is correctly set and your environment is saved to the persistent lab storage.
+
+### How to access /mnt/projects in the Project Wizard:
+1. Go to **File > New Project...** (or Open Project).
+2. Choose **New Directory** or **Existing Directory**.
+3. In the directory selection window, the lab drives (/mnt) will not appear by default in the "Home" list.
+4. Click the **Browse (...)** button.
+5. In the file path bar or the "Go to folder" prompt, type `/mnt` and press Enter.
+6. You can now select the `projects` folder to create or open your RStudio Project.
+
+> **Note:** By working within a Project on `/mnt/projects`, all your paths can be relative (e.g., `read_csv("../datasets/study1.csv")`), making your code more portable.
+
 ## Shutdown
 
 When you are finished working, it is good practice to shut down the server to save system resources. You can do this easily without the command line:
