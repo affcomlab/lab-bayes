@@ -66,3 +66,12 @@ connect_lab_drives <- function(username = NULL) {
         warning("\n⚠️ Some drives failed to connect. Check your password or VPN.")
     }
 }
+
+# Display welcome message in interactive sessions
+if (interactive()) {
+    cat("\n------------------------------------------------------------\n")
+    message("Welcome to the AffCom Lab Bayesian Environment!")
+    message("To access the research servers, please run:")
+    message("connect_lab_drives()")
+    cat("------------------------------------------------------------\n\n")
+}
