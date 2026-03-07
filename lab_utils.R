@@ -13,7 +13,7 @@ connect_lab_drives <- function(username = NULL) {
         list(
             remote = "//resfs.home.ku.edu/groups_hipaa/lsi/jgirard/general/datasets", 
             local = "/mnt/datasets",
-            flags = paste0("ro", base_flags) 
+            flags = paste0("ro,", base_flags) 
         ),
         list(
             remote = "//resfs.home.ku.edu/groups_hipaa/lsi/jgirard/general/projects", 
