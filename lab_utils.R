@@ -67,6 +67,7 @@ connect_lab_drives <- function(username = NULL) {
     }
 }
 
-if (interactive()) {
+# Only print the welcome message in the main visual RStudio session
+setHook("rstudio.sessionInit", function(...) {
   message("Loaded AffCom Lab Utils. Run connect_lab_drives() to login.")
-}
+}, action = "append")
