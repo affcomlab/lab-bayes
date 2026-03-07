@@ -1,0 +1,17 @@
+services:
+  bayes-lab:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: jmgirard/lab-bayes:latest
+    cap_add:
+      - SYS_ADMIN
+      - DAC_READ_SEARCH
+    ports:
+      - "127.0.0.1:${RS_PORT:-8787}:8787"
+      - "127.0.0.1:${SSH_PORT:-2222}:22"
+    environment:
+      - PASSWORD=${SUDO_PASS:-rstudio}
+      - ROOT=true
+      - DISABLE_AUTH=true
+    
