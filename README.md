@@ -2,7 +2,7 @@
 
 This is the **AffCom Lab Edition** of the Bayesian analysis environment.
 
-It is built on top of the public `jmgirard/rocker-bayes` image but adds a secure "Lab Layer" that allows you to connect directly to the AffCom **Datasets** and **Projects** network shares from inside your RStudio session.
+It is built on top of the public [jmgirard/rocker-bayes](https://github.com/jmgirard/rocker-bayes) image but adds a secure "Lab Layer" that allows you to connect directly to the AffCom **Datasets** and **Projects** network shares from inside your RStudio session.
 
 ### Features
 - **Browser-Based Interface:** Runs a full RStudio Server instance accessible directly through your web browser.
