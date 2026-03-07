@@ -22,7 +22,7 @@ It is built on top of the public `jmgirard/rocker-bayes` image but adds a secure
 Open a terminal (PowerShell or Terminal) and run:
 
 ```bash
-git clone [https://github.com/affcomlab/lab-bayes.git](https://github.com/affcomlab/lab-bayes.git)
+git clone https://github.com/affcomlab/lab-bayes.git
 cd lab-bayes
 ```
 
