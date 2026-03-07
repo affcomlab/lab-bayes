@@ -5,20 +5,16 @@ This is the **AffCom Lab Edition** of the Bayesian analysis environment.
 It is built on top of the public `jmgirard/rocker-bayes` image but adds a secure "Lab Layer" that allows you to connect directly to the AffCom **Datasets** and **Projects** network shares from inside your RStudio session.
 
 ### Features
-* **Browser-Based Interface:** Runs a full RStudio Server instance accessible directly through your web browser.
-* **Pre-Loaded Tools:** Comes with RStan, brms, and other essential tools for Bayesian data analysis pre-installed.
-* **Safety Rails:**
-    * `/mnt/datasets`: Mounted **Read-Only** (You cannot accidentally delete raw data).
-    * `/mnt/projects`: Mounted **Read-Write** (Save your scripts and model outputs here).
-
----
+- **Browser-Based Interface:** Runs a full RStudio Server instance accessible directly through your web browser.
+- **Pre-Loaded Tools:** Comes with RStan, CmdStanR, brms, and other essential tools for Bayesian data analysis pre-installed.
+- **Safety Rails:**
+    + `/mnt/datasets`: Mounted **Read-Only** (You cannot accidentally delete raw data).
+    + `/mnt/projects`: Mounted **Read-Write** (Save your scripts and model outputs here).
 
 ## Prerequisites
 
 1.  **Docker Desktop:** [Download and install Docker Desktop](https://www.docker.com/products/docker-desktop/) on your local machine.
 2.  **Network Access:** You must be connected to the campus network or VPN to access the lab drives.
-
----
 
 ## Setup & Launch
 
@@ -49,8 +45,6 @@ You only ever have to do this once! After that, you can just double-click the fi
 
 *Note: The first time you run the start script, Docker will take a few minutes to download the necessary background files. Subsequent runs will be almost instant.*
 
----
-
 ## Usage Example
 
 You can analyze datasets directly from the server and save your compiled models to your project folder.
@@ -75,14 +69,14 @@ fit <- brm(
   data = df_summary, 
   family = gaussian(),
   chains = 4, 
-  cores = 4
+  cores = 4,
+  backend = "cmdstanr"
+  threads = threading(2)
 )
 
 # 5. Save results back to the PROJECTS drive
 write_rds(fit, "/mnt/projects/MyStudy/Models/subject_intercept_model.rds")
 ```
-
----
 
 ## Shutdown
 
@@ -91,16 +85,14 @@ When you are finished working, it is good practice to shut down the server to sa
 2. Go to the **Containers** tab.
 3. Find the `lab-bayes` container in the list and click the **Stop** (square) button.
 
----
-
 ## Troubleshooting
 
 ### "Connection failed" or "Host is down"
-* **Check Credentials:** Did you type your password correctly?
-* **Check NetID:** Use just your username (e.g., `jdoe`), not your full email.
-* **Check Network:** Verify that you are connected to the campus network or VPN.
+- **Check Credentials:** Did you type your password correctly?
+- **Check NetID:** Use just your username (e.g., `jdoe`), not your full email.
+- **Check Network:** Verify that you are connected to the campus network or VPN.
 
 ### "Permission Denied" when saving files
-* **Wrong Folder:** Check where you are trying to save.
-    * You **cannot** save to `/mnt/datasets` (Read-Only).
-    * You **can** save to `/mnt/projects` (Read-Write).
+- **Wrong Folder:** Check where you are trying to save.
+    + You **cannot** save to `/mnt/datasets` (Read-Only).
+    + You **can** save to `/mnt/projects` (Read-Write).
