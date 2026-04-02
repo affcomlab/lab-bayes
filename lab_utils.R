@@ -6,7 +6,11 @@ connect_lab_drives <- function(username = NULL) {
     curr_uid <- system("id -u", intern = TRUE)
     curr_gid <- system("id -g", intern = TRUE)
     
-    base_flags <- sprintf("vers=3.0,sec=ntlmssp,uid=%s,gid=%s,noperm,nobrl", curr_uid, curr_gid)
+    base_flags <- sprintf(
+        "vers=3.0,sec=ntlmssp,uid=%s,gid=%s,noperm,nobrl,mfsymlinks,noserverino,cache=none", 
+        curr_uid, 
+        curr_gid
+    )
     
     # --- SERVER CONFIGURATION ---
     mounts <- list(
