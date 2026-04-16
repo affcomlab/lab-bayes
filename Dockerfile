@@ -2,8 +2,7 @@ FROM jmgirard/rocker-bayes:latest
 
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    cifs-utils \
-    && rm -rf /var/lib/apt/lists/*
+    cifs-utils
 
 # Create mount points
 RUN mkdir -p /mnt/datasets
